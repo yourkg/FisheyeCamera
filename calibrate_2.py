@@ -2,17 +2,11 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 
-##检查opencv版本
-cv_version=cv2.__version__
-print(cv_version)
-if cv_version!='3.4.2':
-    raise ValueError( 'Opencv version incorrect!')
-
 
 def get_useful_area(image):
     image_gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     _,image_binary=cv2.threshold(image_gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    _,contours,_=cv2.findContours(image_binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours,_=cv2.findContours(image_binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     contour_fisheye=sorted(contours, key=cv2.contourArea, reverse=True)[0]
     center, radius = cv2.minEnclosingCircle(contour_fisheye)
     mask=np.zeros_like(image, dtype=np.uint8)
